@@ -31,35 +31,8 @@
         </v-btn>
       </div>
 
-      <!-- @ = v-on -->
-      <button
-        @click="add"
-        type="button"
-        class="my-4 inline-flex items-center py-2 px-4 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-full text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-      >
-        <!-- Heroicon name: solid/mail -->
-        <svg
-          class="-ml-0.5 mr-2 h-6 w-6"
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          viewBox="0 0 24 24"
-          fill="#ffffff"
-        >
-          <path
-            d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-          ></path>
-        </svg>
-        Добавить
-      </button>
-
       <div class="text-center">
-        <v-btn @click="created" class="ma-2" outlined color="indigo">
-          POST
-        </v-btn>
-        <v-btn class="ma-2" outlined fab color="teal">
-          <v-icon>mdi-format-list-bulleted-square</v-icon>
-        </v-btn>
+        <v-btn class="ma-2" outlined color="indigo"> POST </v-btn>
         <label v-bind="response">Добавленный элемент(?): {{ sel }}</label>
       </div>
 
@@ -71,12 +44,30 @@
             <tr>
               <th class="text-left">Продукт</th>
               <th class="text-left">Цена</th>
+              <th class="text-left">Мульон кнопок</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in response" :key="item.name" @click="select(item)">
+            <tr
+              v-for="item in response"
+              :key="item.name"
+              @click="selectProduct(item)"
+            >
               <td>{{ item.productName }}</td>
               <td>{{ item.unitPrice }}</td>
+              <td>
+                <v-btn
+                  @click="addInBasket"
+                  class="mx-2 mb-2"
+                  fab
+                  dark
+                  large
+                  color="purple"
+                >
+                  <v-icon dark> mdi-android </v-icon>
+                  BUY
+                </v-btn>
+              </td>
             </tr>
           </tbody>
         </template>
@@ -101,7 +92,12 @@ export default {
           unitPrice: "Цена",
         },
       ],
-      basket: [],
+      basket: [
+        {
+          name: null,
+          price: null,
+        },
+      ],
       sel: null,
     };
   },
@@ -114,40 +110,16 @@ export default {
         price: this.sel.unitPrice,
       };
       //this.basket.push(newProductOfBasket);
-
-      alert(
+      console.log(
         `currentProduct, ${this.basket}! товар: ${this.basket.name} цена: ${this.basket.price}`
       );
+
+      axios.post(`http://localhost:5090/Product/${this.basket.productId}`, {
+        body: this.response,
+      });
     },
 
-    created() {
-      (this.response.productId = "555"),
-        (this.response.productName = "ТЕСТ"),
-        (this.response.unitPrice = "555"),
-        axios
-          .post("http://localhost:5090/product", this.response)
-          .then((rez) => {
-            console.log(rez);
-            this.response = JSON.stringify(rez.data); //для массива
-          });
-      alert(this.response);
-    },
-
-    add() {
-      axios
-        .post("http://localhost:5090/product", {
-          body: this.response,
-        })
-        .then((resp) => {
-          console.log(resp);
-          this.response = resp.data;
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-    },
-
-    select(currentProduct) {
+    selectProduct(currentProduct) {
       this.basket = currentProduct;
       this.sel = currentProduct;
       alert(this.sel.productName); //"Вывод выбранного товара"
@@ -157,7 +129,7 @@ export default {
   mounted: function () {
     //вывод из бд
     axios
-      .get("http://localhost:5090/product")
+      .get("http://localhost:5090/Product/GetAllProduct")
       .then((resp) => {
         console.log(resp);
         this.response = resp.data;
