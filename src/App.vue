@@ -2,42 +2,9 @@
   <!-- аля html -->
   <div style="width: 70%; max-width: 1200px; margin: 30px auto">
     <div id="app">
-      <h1 class="display-2 font-weight-bold mb-3">Продуктовая лавка</h1>
-      <div>
-        <h1>Корзинка</h1>
-        <v-simple-table dense>
-          <template v-slot:default>
-            <thead>
-              <tr>
-                <th class="text-left">Корзинный товар</th>
-                <th class="text-left">Корзинная цена</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <!-- а могу просто забиндить v-bind="basket" v-for="item in basket" :key="item.name"-->
-                <td>{{ basket.name }}</td>
-                <td>{{ basket.price }}</td>
-              </tr>
-            </tbody>
-          </template>
-        </v-simple-table>
-      </div>
-
-      <div class="text-center">
-        <v-btn @click="addInBasket" class="mx-2" fab dark large color="purple">
-          <v-icon dark> mdi-android </v-icon>
-          BUY
-        </v-btn>
-      </div>
-
-      <div class="text-center">
-        <v-btn class="ma-2" outlined color="indigo"> POST </v-btn>
-        <label v-bind="response">Добавленный элемент(?): {{ sel }}</label>
-      </div>
-
       <!-- Таблица с продуктами -->
-      <h1>Продукты</h1>
+      <h1 class="display-2 font-weight-bold mb-3">Продуктовая лавка</h1>
+      <br />
       <v-simple-table height="300px">
         <template v-slot:default>
           <thead>
@@ -52,12 +19,13 @@
               v-for="item in response"
               :key="item.name"
               @click="selectProduct(item)"
+              v-bind="item"
             >
               <td>{{ item.productName }}</td>
               <td>{{ item.unitPrice }}</td>
               <td>
                 <v-btn
-                  @click="addInBasket"
+                  @click="addInBasket(item.productId)"
                   class="mx-2 mb-2"
                   fab
                   dark
@@ -94,42 +62,24 @@ export default {
       ],
       basket: [
         {
-          name: null,
-          price: null,
+          name: undefined,
+          price: undefined,
         },
       ],
-      sel: null,
+      sel: undefined,
     };
   },
 
   methods: {
-    addInBasket() {
-      // const newProductOfBasket = {
-      this.basket = {
-        name: this.sel.productName,
-        price: this.sel.unitPrice,
-      };
-      //this.basket.push(newProductOfBasket);
-      console.log(
-        `currentProduct, ${this.basket}! товар: ${this.basket.name} цена: ${this.basket.price}`
-      );
-
-      axios.post(`http://localhost:5090/Product/${this.basket.productId}`, {
-        body: this.response,
-      });
-    },
-
-    selectProduct(currentProduct) {
-      this.basket = currentProduct;
-      this.sel = currentProduct;
-      alert(this.sel.productName); //"Вывод выбранного товара"
+    addInBasket(id) {
+      axios.post(`http://localhost:5090/product/${id}`);
     },
   },
 
   mounted: function () {
     //вывод из бд
     axios
-      .get("http://localhost:5090/Product/GetAllProduct")
+      .get("http://localhost:5090/product/getAllProduct")
       .then((resp) => {
         console.log(resp);
         this.response = resp.data;
