@@ -15,12 +15,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="item in response"
-              :key="item.name"
-              @click="selectProduct(item)"
-              v-bind="item"
-            >
+            <tr v-for="item in response" :key="item.name" v-bind="item">
               <td>{{ item.productName }}</td>
               <td>{{ item.unitPrice }}</td>
               <td>
@@ -60,12 +55,7 @@ export default {
           unitPrice: "Цена",
         },
       ],
-      basket: [
-        {
-          name: undefined,
-          price: undefined,
-        },
-      ],
+      basket: [],
       sel: undefined,
     };
   },
