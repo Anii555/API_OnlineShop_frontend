@@ -69,7 +69,7 @@ export default {
   mounted: function () {
     //вывод из бд
     axios
-      .get("http://localhost:5090/product/getAllProduct")
+      .get("http://localhost:5090/product/getAllProducts")
       .then((resp) => {
         console.log(resp);
         this.response = resp.data;
