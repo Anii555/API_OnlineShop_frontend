@@ -45,7 +45,7 @@
         <v-container fluid>
           <v-data-iterator
             :items="response"
-            :items-per-page.sync="itemsPerPage"
+            :items-per-page.sync="infoCardPerPage"
             hide-default-footer
           >
             <template v-slot:header>
@@ -169,7 +169,7 @@ export default {
       ],
       basket: [],
       sel: {},
-      itemsPerPage: 1,
+      infoCardPerPage: 1,
     };
   },
 
