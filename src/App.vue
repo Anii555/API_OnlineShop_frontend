@@ -100,7 +100,7 @@
                 <v-col cols="12" sm="4" md="2" lg="5">
                   <v-card v-if="sel" class="relative">
                     <v-card-title class="subheading font-weight-bold">
-                      "Информация о продукте"
+                      Информация о продукте
                     </v-card-title>
 
                     <v-divider></v-divider>
