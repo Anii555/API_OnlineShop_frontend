@@ -97,17 +97,10 @@
                   </v-card>
                 </v-col>
                 <!-- Конец удачной вставки-->
-                <v-col
-                  v-for="item in itemsPerPage"
-                  :key="item.name"
-                  cols="12"
-                  sm="4"
-                  md="2"
-                  lg="5"
-                >
+                <v-col cols="12" sm="4" md="2" lg="5">
                   <v-card v-if="sel" class="relative">
                     <v-card-title class="subheading font-weight-bold">
-                      {{ "Информация о продукте" }}
+                      "Информация о продукте"
                     </v-card-title>
 
                     <v-divider></v-divider>
@@ -175,7 +168,7 @@ export default {
         },
       ],
       basket: [],
-      sel: [],
+      sel: {},
       itemsPerPage: 1,
     };
   },
