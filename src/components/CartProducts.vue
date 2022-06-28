@@ -3,7 +3,16 @@
   <section v-if="visibleCart">
     <template>
       <v-toolbar class="mb-2" color="indigo darken-5" dark flat>
-        <v-toolbar-title>Корзина: {{ cart_sum }}$</v-toolbar-title>
+        <v-toolbar-title>Корзина: {{ "00, 00" }}$</v-toolbar-title>
+        <v-btn
+          @click="clearCartItem(), showCartItem()"
+          color="indigo darken-5"
+          light
+          flat
+          ><v-toolbar-title class="text-end pa-2"
+            >Очистить</v-toolbar-title
+          ></v-btn
+        >
       </v-toolbar>
     </template>
 
@@ -22,17 +31,12 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr
-                    v-for="item in response"
-                    :key="item.name"
-                    v-bind="item"
-                    @click="selectProduct(item)"
-                  >
+                  <tr v-for="item in response" :key="item.name" v-bind="item">
                     <td>{{ item.productName }}</td>
                     <td>{{ item.unitPrice }}</td>
                     <td>
                       <v-btn
-                        @click="addInBasket(item.productId)"
+                        @click="showCartItem()"
                         class="mx-2 mb-2"
                         fab
                         dark
@@ -102,19 +106,57 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   /*   emits: {
     "visable-cart-items": (value) => typeof value === "bool",
   }, */
 
   data: function () {
-    return { visibleCart: false };
+    return {
+      response: [
+        {
+          productId: "ID Продукта",
+          productName: "Название",
+          unitPrice: "Цена",
+          quantityPerUnit: "Кол-во за единицу",
+        },
+      ],
+      sel: {},
+      visibleCart: false,
+    };
   },
 
   methods: {
     toggleCart() {
       this.visibleCart = !this.visibleCart;
       //this.$emit("visable-cart-items", this.visibleCart);
+    },
+
+    showCartItem() {
+      //вывод из бд
+      axios
+        .get(`http://localhost:5090/cart/`)
+        .then((resp_cart) => {
+          console.log("проверыч корзины: " + resp_cart);
+          this.response = resp_cart.data;
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    },
+
+    clearCartItem() {
+      axios
+        .delete(`http://localhost:5090/cart/`)
+        .then((clear_cart) => {
+          console.log("проверыч корзины удаления: " + clear_cart);
+          this.response = null;
+        })
+        .catch((e) => {
+          console.error("Произошла неведомая хрень: " + e);
+        });
     },
   },
 };

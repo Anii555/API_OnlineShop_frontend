@@ -25,7 +25,9 @@
               <td>{{ item.unitPrice }}</td>
               <td>
                 <v-btn
-                  @click="addInBasket(item.productId)"
+                  @click="
+                    addInBasket(item.productId), $refs.cartProd.showCartItem()
+                  "
                   class="mx-2 mb-2"
                   fab
                   dark
@@ -52,7 +54,9 @@
               <v-toolbar class="mx-2 mb-2" color="indigo darken-5" dark flat>
                 <v-toolbar-title>Продуктовая лавка 2.0</v-toolbar-title>
                 <v-btn
-                  @click="$refs.cartProd.toggleCart()"
+                  @click="
+                    $refs.cartProd.toggleCart(), $refs.cartProd.showCartItem()
+                  "
                   color="indigo darken-5"
                   light
                   flat
@@ -88,7 +92,10 @@
                             <td>{{ item.unitPrice }}</td>
                             <td>
                               <v-btn
-                                @click="addInBasket(item.productId)"
+                                @click="
+                                  addInBasket(item.productId),
+                                    $refs.cartProd.showCartItem()
+                                "
                                 class="mx-2 mb-2"
                                 fab
                                 dark
