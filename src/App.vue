@@ -25,9 +25,7 @@
               <td>{{ item.unitPrice }}</td>
               <td>
                 <v-btn
-                  @click="
-                    addInBasket(item.productId), $refs.cartProd.showCartItem()
-                  "
+                  @click="addInBasket(item.productId)"
                   class="mx-2 mb-2"
                   fab
                   dark
@@ -55,13 +53,13 @@
                 <v-toolbar-title>Продуктовая лавка 2.0</v-toolbar-title>
                 <v-btn
                   @click="
-                    $refs.cartProd.toggleCart(), $refs.cartProd.showCartItem()
+                    $refs.cartProd.toggleCart(), $refs.cartProd.updateCart()
                   "
                   color="indigo darken-5"
                   light
                   flat
                   ><v-toolbar-title class="text-end pa-2"
-                    >Корзина: {{ cart_sum }}$</v-toolbar-title
+                    >Корзина: {{}}$</v-toolbar-title
                   ></v-btn
                 >
               </v-toolbar>
@@ -92,10 +90,7 @@
                             <td>{{ item.unitPrice }}</td>
                             <td>
                               <v-btn
-                                @click="
-                                  addInBasket(item.productId),
-                                    $refs.cartProd.showCartItem()
-                                "
+                                @click="addInBasket(item.productId)"
                                 class="mx-2 mb-2"
                                 fab
                                 dark
@@ -194,14 +189,17 @@ export default {
       basket: [],
       sel: {},
       infoCardPerPage: 1,
-      cart_sum: 0.0,
+
       visibleCart: false,
     };
   },
 
   methods: {
     addInBasket(id) {
-      axios.post(`http://localhost:5090/cart/${id}`);
+      axios.post(`http://localhost:5090/cart/${id}`).then(() => {
+        this.$refs.cartProd.updateCart();
+      });
+      /* this.cart_sum = this.$refs.cartProd.cart_sum; */
     },
 
     selectProduct(selectItem) {

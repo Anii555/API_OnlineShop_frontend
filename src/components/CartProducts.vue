@@ -3,9 +3,9 @@
   <section v-if="visibleCart">
     <template>
       <v-toolbar class="mb-2" color="indigo darken-5" dark flat>
-        <v-toolbar-title>Корзина: {{ "00, 00" }}$</v-toolbar-title>
+        <v-toolbar-title>Корзина: {{ this.cart_sum }}$ </v-toolbar-title>
         <v-btn
-          @click="clearCartItem(), showCartItem()"
+          @click="clearCart(), updateCart()"
           color="indigo darken-5"
           light
           flat
@@ -27,25 +27,45 @@
                   <tr>
                     <th class="text-left">Продукт</th>
                     <th class="text-left">Цена</th>
-                    <th class="text-left">Мульон кнопок</th>
+                    <th class="text-left">Кол-во</th>
+                    <th class="text-left">Сумма</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="item in response" :key="item.name" v-bind="item">
-                    <td>{{ item.productName }}</td>
-                    <td>{{ item.unitPrice }}</td>
+                    <td>{{ item.product.productName }}</td>
+                    <td>{{ item.product.unitPrice }}</td>
                     <td>
-                      <v-btn
-                        @click="showCartItem()"
-                        class="mx-2 mb-2"
-                        fab
-                        dark
-                        large
-                        color="purple"
-                      >
-                        <v-icon dark> mdi-android </v-icon>
-                        BUY
-                      </v-btn>
+                      <template>
+                        <v-icon
+                          @click="
+                            delCartItem(item.amount, item.product.productId),
+                              updateCart()
+                          "
+                          slot="prepend"
+                          color="green"
+                        >
+                          mdi-minus
+                        </v-icon>
+
+                        {{ item.amount }}
+
+                        <v-icon
+                          @click="
+                            changheCountCartItem(
+                              (item.amount += 1),
+                              item.product.productId
+                            )
+                          "
+                          slot="append"
+                          color="red"
+                        >
+                          mdi-plus
+                        </v-icon>
+                      </template>
+                    </td>
+                    <td>
+                      {{ (sum_prod = item.product.unitPrice * item.amount) }}
                     </td>
                   </tr>
                 </tbody>
@@ -109,10 +129,6 @@
 import axios from "axios";
 
 export default {
-  /*   emits: {
-    "visable-cart-items": (value) => typeof value === "bool",
-  }, */
-
   data: function () {
     return {
       response: [
@@ -125,38 +141,95 @@ export default {
       ],
       sel: {},
       visibleCart: false,
+      cart_sum: 0.0,
     };
   },
 
   methods: {
     toggleCart() {
       this.visibleCart = !this.visibleCart;
-      //this.$emit("visable-cart-items", this.visibleCart);
     },
 
-    showCartItem() {
+    updateCart() {
       //вывод из бд
       axios
         .get(`http://localhost:5090/cart/`)
         .then((resp_cart) => {
-          console.log("проверыч корзины: " + resp_cart);
+          console.log("проверыч корзины: ");
+          console.log(resp_cart.data);
           this.response = resp_cart.data;
+          this.cartSum(resp_cart.data);
         })
         .catch((e) => {
           console.error(e);
         });
     },
 
-    clearCartItem() {
+    clearCart() {
       axios
         .delete(`http://localhost:5090/cart/`)
         .then((clear_cart) => {
-          console.log("проверыч корзины удаления: " + clear_cart);
-          this.response = null;
+          console.log("проверыч корзины удаления: ");
+          console.log(clear_cart);
+          this.response = [];
         })
         .catch((e) => {
           console.error("Произошла неведомая хрень: " + e);
         });
+    },
+
+    delCartItem(amount, id) {
+      if (amount > 1) {
+        this.changheCountCartItem((amount -= 1), id);
+      } else {
+        axios
+          .delete(`http://localhost:5090/cart/${id}`)
+          .then(() => {
+            this.updateCart();
+          })
+          .catch((e) => {
+            console.error("Произошла неведомая хрень: " + e);
+          });
+      }
+    },
+
+    changheCountCartItem(amount, id) {
+      axios.put(`http://localhost:5090/cart/${id}/${amount}`).then(() => {
+        this.updateCart();
+      });
+    },
+
+    cartSum(items) {
+      var sum_arr = [];
+      //sum_arr.push(items);
+      //let x = 0;
+      //this.cart_sum = items.map((i) => i.product.unitPrice).reverse()[0];
+
+      /*  for (var i = 0; i < sum_arr.lenght; i++) {
+        this.cart_sum += items[i].product.unitPrice;
+        console.log(i + "-проход: " + this.cart_sum);
+      } */
+
+      //this.cart_sum = items.reduce((acc, item) => acc + item.unitPrice, 0);
+
+      items.forEach((product, amount) => {
+        sum_arr.push(product.unitPrice * amount);
+      });
+      /* this.cart_sum = sum_arr.reduce(function (sum, current) {
+        return sum + current;
+      }, 0); */
+      this.cart_sum = sum_arr.reduce(Math.sum);
+
+      /*  this.cart_sum = items.unitPrice.reduce(
+        Math.sum(items.product.unitPrice * items.amount)
+      ); */
+      console.log("Массив: ");
+      console.log(sum_arr);
+      console.log("Типа сумма: ");
+      console.log(this.cart_sum);
+      /* var rez = sum_arr.
+      );
+      this.$emit("cart_sum");*/
     },
   },
 };
