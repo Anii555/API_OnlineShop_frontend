@@ -58,10 +58,16 @@
                   color="indigo darken-5"
                   light
                   flat
-                  ><v-toolbar-title class="text-end pa-2"
+                  ><v-toolbar-title
+                    v-bind:cart_sum="total.cart_sum"
+                    class="text-end pa-2"
                     >Корзина: {{}}$</v-toolbar-title
-                  ></v-btn
-                >
+                  >
+                  <cart-products
+                    :cart_sum="total.cart_sum"
+                    @changeSum()="total.cart_sum = {{cart_sum}}"
+                  />
+                </v-btn>
               </v-toolbar>
             </template>
 
@@ -189,8 +195,10 @@ export default {
       basket: [],
       sel: {},
       infoCardPerPage: 1,
-
       visibleCart: false,
+      total: {
+        cart_sum: 0.0,
+      },
     };
   },
 
@@ -199,7 +207,6 @@ export default {
       axios.post(`http://localhost:5090/cart/${id}`).then(() => {
         this.$refs.cartProd.updateCart();
       });
-      /* this.cart_sum = this.$refs.cartProd.cart_sum; */
     },
 
     selectProduct(selectItem) {
@@ -218,6 +225,7 @@ export default {
       .catch((e) => {
         console.error(e);
       });
+    /* this.cart_sum = this.$refs.cartProd.cart_sum; */
   },
 };
 </script>

@@ -129,6 +129,10 @@
 import axios from "axios";
 
 export default {
+  props: {
+    cart_sum: Number,
+  },
+
   data: function () {
     return {
       response: [
@@ -141,7 +145,6 @@ export default {
       ],
       sel: {},
       visibleCart: false,
-      cart_sum: 0.0,
     };
   },
 
@@ -200,36 +203,19 @@ export default {
     },
 
     cartSum(items) {
-      var sum_arr = [];
-      //sum_arr.push(items);
-      //let x = 0;
-      //this.cart_sum = items.map((i) => i.product.unitPrice).reverse()[0];
-
-      /*  for (var i = 0; i < sum_arr.lenght; i++) {
-        this.cart_sum += items[i].product.unitPrice;
-        console.log(i + "-проход: " + this.cart_sum);
-      } */
-
-      //this.cart_sum = items.reduce((acc, item) => acc + item.unitPrice, 0);
-
-      items.forEach((product, amount) => {
-        sum_arr.push(product.unitPrice * amount);
-      });
-      /* this.cart_sum = sum_arr.reduce(function (sum, current) {
+      this.cart_sum = items.map((i) => i.product.unitPrice * i.amount);
+      this.cart_sum = this.cart_sum.reduce((sum, current) => {
         return sum + current;
-      }, 0); */
-      this.cart_sum = sum_arr.reduce(Math.sum);
+      }, 0);
 
-      /*  this.cart_sum = items.unitPrice.reduce(
-        Math.sum(items.product.unitPrice * items.amount)
-      ); */
-      console.log("Массив: ");
-      console.log(sum_arr);
       console.log("Типа сумма: ");
       console.log(this.cart_sum);
-      /* var rez = sum_arr.
-      );
-      this.$emit("cart_sum");*/
+
+      this.changeSum();
+    },
+
+    changeSum() {
+      this.$emit(`cart_sum`);
     },
   },
 };
