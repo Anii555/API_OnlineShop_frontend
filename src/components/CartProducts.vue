@@ -3,7 +3,7 @@
   <section v-if="visibleCart">
     <template>
       <v-toolbar class="mb-2" color="indigo darken-5" dark flat>
-        <v-toolbar-title>Корзина: {{ this.cart_sum }}$ </v-toolbar-title>
+        <v-toolbar-title>Корзина: {{ cart_sum }}$ </v-toolbar-title>
         <v-btn
           @click="clearCart(), updateCart()"
           color="indigo darken-5"
@@ -129,10 +129,6 @@
 import axios from "axios";
 
 export default {
-  props: {
-    cart_sum: Number,
-  },
-
   data: function () {
     return {
       response: [

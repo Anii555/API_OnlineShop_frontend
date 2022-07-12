@@ -58,13 +58,9 @@
                   color="indigo darken-5"
                   light
                   flat
-                  ><v-toolbar-title v-bind="cart_sum" class="text-end pa-2"
+                  ><v-toolbar-title @cart_sum="cart_sum" class="text-end pa-2"
                     >Корзина: {{ cart_sum }}$</v-toolbar-title
                   >
-                  <cart-products
-                    :cart_sum="total.cart_sum"
-                    @changeSum()="changeSum($event)"
-                  />
                 </v-btn>
               </v-toolbar>
             </template>
@@ -227,7 +223,8 @@ export default {
       .catch((e) => {
         console.error(e);
       });
-    /* this.cart_sum = this.$refs.cartProd.cart_sum; */
+
+    this.$root.$on(`cart_sum`, this.changeSum);
   },
 };
 </script>
