@@ -59,7 +59,7 @@
                   light
                   flat
                   ><v-toolbar-title @cart_sum="changeSum" class="text-end pa-2"
-                    >Корзина: {{ cart_sum }}$</v-toolbar-title
+                    >Корзина: {{ total.cart_sum }}$</v-toolbar-title
                   >
                 </v-btn>
               </v-toolbar>
