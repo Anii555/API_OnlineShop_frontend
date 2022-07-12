@@ -205,7 +205,7 @@ export default {
     cartSum(items) {
       this.cart_sum = items.map((i) => i.product.unitPrice * i.amount);
       this.cart_sum = this.cart_sum.reduce((sum, current) => {
-        return sum + current;
+        sum + current;
       }, 0);
 
       console.log("Типа сумма: ");

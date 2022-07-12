@@ -58,14 +58,12 @@
                   color="indigo darken-5"
                   light
                   flat
-                  ><v-toolbar-title
-                    v-bind:cart_sum="total.cart_sum"
-                    class="text-end pa-2"
-                    >Корзина: {{}}$</v-toolbar-title
+                  ><v-toolbar-title v-bind="cart_sum" class="text-end pa-2"
+                    >Корзина: {{ cart_sum }}$</v-toolbar-title
                   >
                   <cart-products
                     :cart_sum="total.cart_sum"
-                    @changeSum()="total.cart_sum = {{cart_sum}}"
+                    @changeSum()="changeSum($event)"
                   />
                 </v-btn>
               </v-toolbar>
@@ -211,6 +209,10 @@ export default {
 
     selectProduct(selectItem) {
       this.sel = selectItem;
+    },
+
+    changeSum(cart_sum) {
+      this.total.cart_sum = cart_sum;
     },
   },
 
