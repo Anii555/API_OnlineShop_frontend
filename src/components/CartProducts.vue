@@ -211,7 +211,7 @@ export default {
     },
 
     changeSum() {
-      this.$emit(`cart_sum`);
+      this.$emit(`cart_sum`, this.cart_sum);
     },
   },
 };

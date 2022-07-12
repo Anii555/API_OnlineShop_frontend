@@ -58,7 +58,7 @@
                   color="indigo darken-5"
                   light
                   flat
-                  ><v-toolbar-title @cart_sum="cart_sum" class="text-end pa-2"
+                  ><v-toolbar-title @cart_sum="changeSum" class="text-end pa-2"
                     >Корзина: {{ cart_sum }}$</v-toolbar-title
                   >
                 </v-btn>
@@ -156,7 +156,7 @@
               </v-toolbar>
             </template>
 
-            <cart-products ref="cartProd" />
+            <cart-products ref="cartProd" @cart_sum="changeSum" />
           </v-data-iterator>
         </v-container>
       </template>
