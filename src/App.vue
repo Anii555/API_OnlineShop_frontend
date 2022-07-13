@@ -49,8 +49,19 @@
             hide-default-footer
           >
             <template v-slot:header>
-              <v-toolbar class="mb-2" color="indigo darken-5" dark flat>
+              <v-toolbar class="mx-2 mb-2" color="indigo darken-5" dark flat>
                 <v-toolbar-title>Продуктовая лавка 2.0</v-toolbar-title>
+                <v-btn
+                  @click="
+                    $refs.cartProd.toggleCart(), $refs.cartProd.updateCart()
+                  "
+                  color="indigo darken-5"
+                  light
+                  flat
+                  ><v-toolbar-title @cart_sum="changeSum" class="text-end pa-2"
+                    >Корзина: {{ total.cart_sum }}$</v-toolbar-title
+                  >
+                </v-btn>
               </v-toolbar>
             </template>
 
@@ -144,6 +155,8 @@
                 <v-toolbar-title class="subheading"> </v-toolbar-title>
               </v-toolbar>
             </template>
+
+            <cart-products ref="cartProd" @cart_sum="changeSum" />
           </v-data-iterator>
         </v-container>
       </template>
@@ -153,9 +166,15 @@
 
 <script>
 import axios from "axios";
+import CartProducts from "./components/CartProducts.vue";
 
 export default {
   name: "App",
+
+  components: {
+    CartProducts,
+  },
+
   data: function () {
     //вывод данных в textarea
     return {
@@ -170,20 +189,26 @@ export default {
       basket: [],
       sel: {},
       infoCardPerPage: 1,
+      visibleCart: false,
+      total: {
+        cart_sum: 0.0,
+      },
     };
   },
 
   methods: {
     addInBasket(id) {
-      axios.post(`http://localhost:5090/cart/${id}`);
+      axios.post(`http://localhost:5090/cart/${id}`).then(() => {
+        this.$refs.cartProd.updateCart();
+      });
     },
 
     selectProduct(selectItem) {
       this.sel = selectItem;
     },
 
-    selectProduct(selectItem) {
-      this.sel = selectItem;
+    changeSum(cart_sum) {
+      this.total.cart_sum = cart_sum;
     },
   },
 
@@ -198,6 +223,8 @@ export default {
       .catch((e) => {
         console.error(e);
       });
+
+    this.$root.$on(`cart_sum`, this.changeSum);
   },
 };
 </script>
