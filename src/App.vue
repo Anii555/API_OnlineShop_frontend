@@ -175,7 +175,11 @@ export default {
 
   methods: {
     addInBasket(id) {
-      axios.post(`http://localhost:5090/product/${id}`);
+      axios.post(`http://localhost:5090/cart/${id}`);
+    },
+
+    selectProduct(selectItem) {
+      this.sel = selectItem;
     },
 
     selectProduct(selectItem) {
