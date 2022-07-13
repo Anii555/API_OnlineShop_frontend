@@ -141,6 +141,7 @@ export default {
       ],
       sel: {},
       visibleCart: false,
+      cart_sum: 0,
     };
   },
 
