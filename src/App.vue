@@ -48,22 +48,7 @@
             :items-per-page.sync="infoCardPerPage"
             hide-default-footer
           >
-            <template v-slot:header>
-              <v-toolbar class="mx-2 mb-2" color="indigo darken-5" dark flat>
-                <v-toolbar-title>Продуктовая лавка 2.0</v-toolbar-title>
-                <v-btn
-                  @click="
-                    $refs.cartProd.toggleCart(), $refs.cartProd.updateCart()
-                  "
-                  color="indigo darken-5"
-                  light
-                  flat
-                  ><v-toolbar-title @cart_sum="changeSum" class="text-end pa-2"
-                    >Корзина: {{ total.cart_sum }}$</v-toolbar-title
-                  >
-                </v-btn>
-              </v-toolbar>
-            </template>
+            <template v-slot:header> image.png </template>
 
             <template>
               <v-row>
