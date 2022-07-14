@@ -166,8 +166,8 @@
 
 <script>
 import CartProducts from "./components/CartProducts.vue";
-import productApi from "./src/productApi.js";
-import cartApi from "./src/cartApi.js";
+import productsApi from "./productsApi.js";
+import cartApi from "./cartApi.js";
 
 export default {
   name: "App",
@@ -199,7 +199,9 @@ export default {
 
   methods: {
     addInBasket(id) {
-      cartApi.addInBasket(id);
+      cartApi.addInBasket(id).then(() => {
+        this.$refs.cartProd.updateCart();
+      });
     },
 
     selectProduct(selectItem) {
@@ -211,9 +213,17 @@ export default {
     },
   },
 
-  mounted: function () {
+  mounted: function getAllProducts() {
     //вывод из бд
-    productApi.getAllProducts();
+    productsApi
+      .getAllProducts()
+      .then((resp) => {
+        console.log(resp);
+        this.response = resp.data;
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   },
 };
 </script>

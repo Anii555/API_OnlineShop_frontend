@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import cartApi from "./API_OnlineShop_frontend/src/cartApi.js";
 
 export default {
   data: function () {
@@ -152,8 +152,8 @@ export default {
 
     updateCart() {
       //вывод из бд
-      axios
-        .get(`http://localhost:5090/cart/`)
+      cartApi
+        .updateCart()
         .then((resp_cart) => {
           console.log("проверыч корзины: ");
           console.log(resp_cart.data);
@@ -166,8 +166,8 @@ export default {
     },
 
     clearCart() {
-      axios
-        .delete(`http://localhost:5090/cart/`)
+      cartApi
+        .clearCart()
         .then((clear_cart) => {
           console.log("проверыч корзины удаления: ");
           console.log(clear_cart);
@@ -182,8 +182,8 @@ export default {
       if (amount > 1) {
         this.changheCountCartItem((amount -= 1), id);
       } else {
-        axios
-          .delete(`http://localhost:5090/cart/${id}`)
+        cartApi
+          .delCartItem(amount, id)
           .then(() => {
             this.updateCart();
           })
@@ -194,7 +194,7 @@ export default {
     },
 
     changheCountCartItem(amount, id) {
-      axios.put(`http://localhost:5090/cart/${id}/${amount}`).then(() => {
+      cartApi.changheCountCartItem(amount, id).then(() => {
         this.updateCart();
       });
     },
