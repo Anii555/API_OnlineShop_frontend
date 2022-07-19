@@ -166,8 +166,8 @@
 
 <script>
 import CartProducts from "./components/CartProducts.vue";
-import productsApi from "./productsApi.js";
-import cartApi from "./cartApi.js";
+import productsApi from "./api/productsApi.js";
+import cartApi from "./api/cartApi.js";
 
 export default {
   name: "App",
@@ -218,7 +218,6 @@ export default {
     productsApi
       .getAllProducts()
       .then((resp) => {
-        console.log(resp);
         this.response = resp.data;
       })
       .catch((e) => {

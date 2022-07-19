@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import cartApi from "./API_OnlineShop_frontend/src/cartApi.js";
+import cartApi from "../api/cartApi.js";
 
 export default {
   data: function () {
@@ -153,10 +153,8 @@ export default {
     updateCart() {
       //вывод из бд
       cartApi
-        .updateCart()
+        .getCart()
         .then((resp_cart) => {
-          console.log("проверыч корзины: ");
-          console.log(resp_cart.data);
           this.response = resp_cart.data;
           this.cartSum(resp_cart.data);
         })
@@ -168,9 +166,7 @@ export default {
     clearCart() {
       cartApi
         .clearCart()
-        .then((clear_cart) => {
-          console.log("проверыч корзины удаления: ");
-          console.log(clear_cart);
+        .then(() => {
           this.response = [];
         })
         .catch((e) => {
@@ -185,7 +181,7 @@ export default {
         cartApi
           .delCartItem(amount, id)
           .then(() => {
-            this.updateCart();
+            this.getCart();
           })
           .catch((e) => {
             console.error("Произошла неведомая хрень: " + e);
@@ -195,16 +191,13 @@ export default {
 
     changheCountCartItem(amount, id) {
       cartApi.changheCountCartItem(amount, id).then(() => {
-        this.updateCart();
+        this.getCart();
       });
     },
 
     cartSum(items) {
       let itemSums = items.map((i) => i.product.unitPrice * i.amount);
       this.cart_sum = itemSums.reduce((sum, current) => sum + current, 0);
-
-      console.log("Типа сумма: ");
-      console.log(this.cart_sum);
 
       this.changeSum();
     },
