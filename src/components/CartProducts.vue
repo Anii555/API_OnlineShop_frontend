@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import cartApi from "../api/cartApi.js";
 
 export default {
   data: function () {
@@ -152,11 +152,9 @@ export default {
 
     updateCart() {
       //вывод из бд
-      axios
-        .get(`http://localhost:5090/cart/`)
+      cartApi
+        .getCart()
         .then((resp_cart) => {
-          console.log("проверыч корзины: ");
-          console.log(resp_cart.data);
           this.response = resp_cart.data;
           this.cartSum(resp_cart.data);
         })
@@ -166,11 +164,9 @@ export default {
     },
 
     clearCart() {
-      axios
-        .delete(`http://localhost:5090/cart/`)
-        .then((clear_cart) => {
-          console.log("проверыч корзины удаления: ");
-          console.log(clear_cart);
+      cartApi
+        .clearCart()
+        .then(() => {
           this.response = [];
         })
         .catch((e) => {
@@ -182,10 +178,10 @@ export default {
       if (amount > 1) {
         this.changheCountCartItem((amount -= 1), id);
       } else {
-        axios
-          .delete(`http://localhost:5090/cart/${id}`)
+        cartApi
+          .delCartItem(amount, id)
           .then(() => {
-            this.updateCart();
+            this.getCart();
           })
           .catch((e) => {
             console.error("Произошла неведомая хрень: " + e);
@@ -194,17 +190,14 @@ export default {
     },
 
     changheCountCartItem(amount, id) {
-      axios.put(`http://localhost:5090/cart/${id}/${amount}`).then(() => {
-        this.updateCart();
+      cartApi.changheCountCartItem(amount, id).then(() => {
+        this.getCart();
       });
     },
 
     cartSum(items) {
       let itemSums = items.map((i) => i.product.unitPrice * i.amount);
       this.cart_sum = itemSums.reduce((sum, current) => sum + current, 0);
-
-      console.log("Типа сумма: ");
-      console.log(this.cart_sum);
 
       this.changeSum();
     },

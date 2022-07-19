@@ -165,8 +165,9 @@
 </template>
 
 <script>
-import axios from "axios";
 import CartProducts from "./components/CartProducts.vue";
+import productsApi from "./api/productsApi.js";
+import cartApi from "./api/cartApi.js";
 
 export default {
   name: "App",
@@ -198,7 +199,7 @@ export default {
 
   methods: {
     addInBasket(id) {
-      axios.post(`http://localhost:5090/cart/${id}`).then(() => {
+      cartApi.addInBasket(id).then(() => {
         this.$refs.cartProd.updateCart();
       });
     },
@@ -212,19 +213,16 @@ export default {
     },
   },
 
-  mounted: function () {
+  mounted: function getAllProducts() {
     //вывод из бд
-    axios
-      .get("http://localhost:5090/product/getAllProducts")
+    productsApi
+      .getAllProducts()
       .then((resp) => {
-        console.log(resp);
         this.response = resp.data;
       })
       .catch((e) => {
         console.error(e);
       });
-
-    this.$root.$on(`cart_sum`, this.changeSum);
   },
 };
 </script>
