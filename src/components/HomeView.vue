@@ -25,10 +25,7 @@
                             name="Login"
                             type="text"
                             color="teal accent-3"
-                          >
-                            {{ login }}
-                          </v-text-field>
-
+                          />
                           <v-text-field
                             v-model="password"
                             id="password"
@@ -94,6 +91,7 @@
                         </h4>
                         <v-form>
                           <v-text-field
+                            v-model="login"
                             label="Login"
                             name="Login"
                             type="text"
@@ -101,6 +99,7 @@
                           />
 
                           <v-text-field
+                            v-model="password"
                             id="password"
                             label="Password"
                             name="password"
@@ -111,7 +110,7 @@
                       </v-card-text>
                       <div class="text-center mt-n5">
                         <v-btn
-                          @click="signUp(login, password)"
+                          @click="accountApi.login(login, password)"
                           rounded
                           color="teal accent-3"
                           dark
@@ -136,12 +135,9 @@ import accountApi from "../api/accountApi.js";
 export default {
   data: function () {
     return {
-      response: [
-        {
-          login: "login",
-          password: "password",
-        },
-      ],
+      login: "",
+      password: "",
+      saveLogin: "",
       step: 1,
     };
   },
@@ -149,9 +145,20 @@ export default {
     source: String,
   },
 
+  mounted() {
+    if (localStorage.login) {
+      this.name = localStorage.login;
+    }
+  },
+  watch: {
+    name(newLogin) {
+      localStorage.login = newLogin;
+    },
+  },
+
   methods: {
     signIn(login, password) {
-      accountApi.signIn().then((resp) => {
+      accountApi.signIn(login, password).then((resp) => {
         console.log("login: " + login + " password: " + password);
         console.log(resp);
       });
@@ -159,15 +166,10 @@ export default {
   },
 
   signUp(login, password) {
-    accountApi.signUp().then((resp) => {
+    accountApi.signUp(login, password).then((resp) => {
       console.log("login: " + login + " password: " + password);
       console.log(resp);
     });
-  },
-
-  logout() {
-    // remove user from local storage to log user out
-    localStorage.removeItem("user");
   },
 };
 </script>
