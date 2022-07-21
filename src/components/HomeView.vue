@@ -38,7 +38,7 @@
                       </v-card-text>
                       <div class="text-center mt-3">
                         <v-btn
-                          @click="signIn(this.login, this.password)"
+                          @click="signIn(login, password)"
                           rounded
                           color="teal accent-3"
                           dark
