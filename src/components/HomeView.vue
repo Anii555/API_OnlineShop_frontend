@@ -16,7 +16,7 @@
                           Sign in to Anii Project
                         </h1>
                         <h4 class="text-center mt-4">
-                          Ensure your Login for registration
+                          Ensure your Login for authorization
                         </h4>
                         <v-form>
                           <v-text-field
@@ -35,7 +35,6 @@
                             color="teal accent-3"
                           />
                         </v-form>
-                        <h3 class="text-center mt-4">Forgot your password ?</h3>
                       </v-card-text>
                       <div class="text-center mt-3">
                         <v-btn
@@ -51,7 +50,7 @@
                       <v-card-text class="white--text mt-12">
                         <h1 class="text-center display-1">Hello, Friend!</h1>
                         <h5 class="text-center">
-                          Enter your personal details and start journay with us
+                          Enter your personal details and start journey with us
                         </h5>
                       </v-card-text>
                       <div class="text-center">
@@ -69,7 +68,7 @@
                         <h1 class="text-center display-1">Welcome Back!</h1>
                         <h5 class="text-center">
                           To Keep connected with us please login with your
-                          personnel info
+                          personal info
                         </h5>
                       </v-card-text>
                       <div class="text-center">
@@ -97,7 +96,6 @@
                             type="text"
                             color="teal accent-3"
                           />
-
                           <v-text-field
                             v-model="password"
                             id="password"
@@ -110,7 +108,7 @@
                       </v-card-text>
                       <div class="text-center mt-n5">
                         <v-btn
-                          @click="accountApi.login(login, password)"
+                          @click="authApi.login(login, password)"
                           rounded
                           color="teal accent-3"
                           dark
@@ -130,14 +128,14 @@
 </template>
 
 <script>
-import accountApi from "../api/accountApi.js";
+import authApi from "../api/authApi.js";
 
 export default {
   data: function () {
     return {
       login: "",
       password: "",
-      saveLogin: "",
+      visibleError: false,
       step: 1,
     };
   },
@@ -145,20 +143,9 @@ export default {
     source: String,
   },
 
-  mounted() {
-    if (localStorage.login) {
-      this.name = localStorage.login;
-    }
-  },
-  watch: {
-    name(newLogin) {
-      localStorage.login = newLogin;
-    },
-  },
-
   methods: {
     signIn(login, password) {
-      accountApi.signIn(login, password).then((resp) => {
+      authApi.signIn(login, password).then((resp) => {
         console.log("login: " + login + " password: " + password);
         console.log(resp);
       });
@@ -166,7 +153,7 @@ export default {
   },
 
   signUp(login, password) {
-    accountApi.signUp(login, password).then((resp) => {
+    authApi.signUp(login, password).then((resp) => {
       console.log("login: " + login + " password: " + password);
       console.log(resp);
     });
