@@ -2,6 +2,7 @@
   <!-- аля html -->
   <div style="width: 70%; max-width: 1200px; margin: 30px auto">
     <div id="app">
+      <home-view ref="homeView" />
       <!-- Таблица с продуктами -->
       <h1 class="display-2 font-weight-bold mb-3">Продуктовая лавка</h1>
       <br />
@@ -166,6 +167,7 @@
 
 <script>
 import CartProducts from "./components/CartProducts.vue";
+import HomeView from "./components/HomeView.vue";
 import productsApi from "./api/productsApi.js";
 import cartApi from "./api/cartApi.js";
 
@@ -174,6 +176,7 @@ export default {
 
   components: {
     CartProducts,
+    HomeView,
   },
 
   data: function () {
